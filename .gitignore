@@ -1,0 +1,14 @@
+!.gitignore
+.settings
+.project
+.pydevproject
+.idea
+.coverage
+*.pyc
+*.pyo
+*.db
+*.swp
+*.bak
+*.tmp
+*.egg-info
+coverage
