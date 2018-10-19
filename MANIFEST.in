@@ -1,0 +1,8 @@
+recursive-exclude * *
+include README.md
+include LICENSE
+include MANIFEST.in
+recursive-include lintlens *.py
+recursive-exclude * __pycache__
+recursive-exclude * *.py[co]
+exclude *.egg-info
