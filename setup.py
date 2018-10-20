@@ -38,7 +38,11 @@ setup(
     extras_require={
         'tests': tests_require,
     },
+
     entry_points={
+        'console_scripts': [
+            'lintlens = lintlens.cli:main',
+        ]
     },
     test_suite='tests'
 )
