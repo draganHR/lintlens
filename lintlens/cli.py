@@ -6,27 +6,30 @@ from __future__ import print_function, unicode_literals
 import re
 import argparse
 import subprocess
-import difflib
 import codecs
+from collections import namedtuple
 
 from six.moves import range
 
 
-def handle_range(revision_range, lint_diff):
+LintEntry = namedtuple('LintEntry', ['filename', 'start', 'count', 'content'])
+
+
+def handle_range(revision_range, lint_lines):
     diff_lines = {}
     for filename, hunks in get_diff_lines(revision_range):
         diff_lines[filename[1]] = hunks
 
-    for lint_line in lint_diff:
-        filename, start, count, content = parse_lint_line(lint_line)
+    for lint_line in lint_lines:
+        lint_entry = parse_lint_line(lint_line)
 
         # skip file not changed in revision_range
-        if filename not in diff_lines:
+        if lint_entry.filename not in diff_lines:
             continue
 
-        hunks = diff_lines[filename]
-        if check_line_overlap_hunks(start, count, hunks):
-            print(lint_line.encode('utf-8'))
+        hunks = diff_lines[lint_entry.filename]
+        if check_line_overlap_hunks(lint_entry.start, lint_entry.count, hunks):
+            print(lint_line.encode('utf-8'), end='')
 
 
 def check_line_overlap_hunks(start, count, hunks):
@@ -48,20 +51,26 @@ def parse_lint_line(line):
     """Parse lint diff line
 
     >>> parse_lint_line('foo.txt:1:2: bar')
-    (u'foo.txt', 1, 2, u'bar')
+    LintEntry(filename=u'foo.txt', start=1, count=2, content=u'bar')
 
     >>> parse_lint_line('foo.txt:123:50: bar')
-    (u'foo.txt', 123, 50, u'bar')
+    LintEntry(filename=u'foo.txt', start=123, count=50, content=u'bar')
 
     >>> parse_lint_line('foo.txt:0:1:')
-    (u'foo.txt', 0, 1, u'')
+    LintEntry(filename=u'foo.txt', start=0, count=1, content=u'')
 
     >>> parse_lint_line('foo/foo bar.txt:0:1: baz')
-    (u'foo/foo bar.txt', 0, 1, u'baz')
+    LintEntry(filename=u'foo/foo bar.txt', start=0, count=1, content=u'baz')
     """
     # TODO: handle colon in filename
     line_parts = re.match('(?:\./)?(.+?):(\d+):(\d+): ?(.*)', line)
-    return line_parts.group(1), int(line_parts.group(2)), int(line_parts.group(3)), line_parts.group(4)
+    lint_entry = LintEntry(
+        line_parts.group(1),
+        int(line_parts.group(2)),
+        int(line_parts.group(3)),
+        line_parts.group(4)
+    )
+    return lint_entry
 
 
 def get_diff_lines(revision_range):
@@ -168,41 +177,19 @@ def read_file_lines(filename):
     return lines
 
 
-def get_added_lines(from_file, to_file):
-
-    diff_count = -3
-    for line in difflib.unified_diff(from_file, to_file, n=0):
-        diff_count += 1
-
-        # Skip header
-        if diff_count < 0:
-            continue
-
-        # We just want new lines
-        if not line.startswith('+'):
-            continue
-
-        yield line[1:-1]
-
-
 def main():
     parser = argparse.ArgumentParser(prog='lintlens',
                                      description=__doc__)
     parser.add_argument('revision_range',
                         help='Include changes in the specified revision range.')
-    parser.add_argument('from_filename',
-                        help='From filename')
-    parser.add_argument('to_filename',
-                        help='To filename')
+    parser.add_argument('input_filename',
+                        help='Input filename')
 
     args = parser.parse_args()
 
-    from_file = read_file_lines(args.from_filename)
-    to_file = read_file_lines(args.to_filename)
+    lint_lines = read_file_lines(args.input_filename)
 
-    lint_diff = list(get_added_lines(from_file, to_file))
-
-    handle_range(args.revision_range, lint_diff)
+    handle_range(args.revision_range, lint_lines)
 
 
 if __name__ == "__main__":
