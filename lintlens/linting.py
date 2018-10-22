@@ -3,7 +3,7 @@ from __future__ import print_function, unicode_literals
 from collections import namedtuple
 import re
 
-LintEntry = namedtuple('LintEntry', ['filename', 'start', 'count', 'content'])
+LintEntry = namedtuple('LintEntry', ['filename', 'line', 'column', 'message'])
 
 
 def parse_lint_line(line):

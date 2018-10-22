@@ -25,7 +25,7 @@ def handle_range(revision_range, lint_lines):
             continue
 
         hunks = diff_lines[lint_entry.filename]
-        if check_line_overlap_hunks(lint_entry.start, lint_entry.count, hunks):
+        if check_line_overlap_hunks(lint_entry.line, hunks, threshold=1):
             print(lint_line.encode('utf-8'), end='')
 
 
