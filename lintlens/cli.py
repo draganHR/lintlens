@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""...
-"""
 from __future__ import print_function, unicode_literals
 
 import argparse
@@ -36,10 +34,11 @@ def read_file_lines(filename):
 
 
 def main():
-    parser = argparse.ArgumentParser(prog='lintlens',
-                                     description=__doc__)
+    parser = argparse.ArgumentParser(prog='lintlens')
     parser.add_argument('revision_range',
-                        help='Include changes in the specified revision range.')
+                        help='Include changes in the specified revision range. '
+                             'Example: "master..HEAD".'
+                        )
     parser.add_argument('input_filename',
                         help='Input filename')
 
