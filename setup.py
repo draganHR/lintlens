@@ -5,7 +5,7 @@ from setuptools import setup, find_packages
 import lintlens
 
 
-packages = find_packages(exclude=('tests',))
+packages = find_packages(where='lintlens', exclude=('tests',))
 
 
 requires = [
@@ -23,10 +23,10 @@ with open('README.md', 'r', 'utf-8') as f:
 setup(
     name='lintlens',
     version=lintlens.__version__,
-    description='...',
+    description='Filters lint report and keep only defects on changed lines',
     long_description=readme,
     author='Dragan Bosnjak',
-    url='https://github.com/draganHR',
+    url='https://github.com/draganHR/lintlens',
     packages=packages,
     include_package_data=True,
     zip_safe=False,
