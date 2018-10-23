@@ -6,7 +6,7 @@ import argparse
 import codecs
 
 from .git import get_diff_lines
-from .linting import parse_lint_line
+from .lint.unix import parse_lint_line
 from .utils import check_line_overlap_hunks
 
 
