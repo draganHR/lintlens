@@ -5,7 +5,7 @@ from setuptools import setup, find_packages
 import lintlens
 
 
-packages = find_packages(where='lintlens', exclude=('tests',))
+packages = find_packages(include=('lintlens*',), exclude=('*.tests',))
 
 
 requires = [
