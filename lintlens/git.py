@@ -1,8 +1,9 @@
 from __future__ import print_function, unicode_literals
 
 import subprocess
-
 import re
+
+import six
 
 
 def get_diff_lines(revision_range):
@@ -14,7 +15,8 @@ def get_diff_lines(revision_range):
 def get_diff(revision_range):
     cmd_output = subprocess.check_output(['git', 'diff', revision_range, '--unified=0'],
                                          universal_newlines=True)
-    cmd_output = cmd_output.decode('utf-8')
+    if isinstance(cmd_output, six.binary_type):
+        cmd_output = cmd_output.decode('utf-8')
     return cmd_output
 
 
@@ -47,7 +49,9 @@ def parse_diff(diff_content):
 
 
 def parse_diff_filename(line):
-    line_decoded = line.decode('unicode-escape').encode('latin-1').decode('utf-8')
+    if isinstance(line, six.binary_type):
+        line = line.decode('unicode-escape')
+    line_decoded = line.encode('latin-1').decode('utf-8')
     without_prefix = line_decoded[4:].rstrip()
     if without_prefix == '/dev/null':
         return ''
