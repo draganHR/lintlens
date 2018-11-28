@@ -33,6 +33,7 @@ setup(
     classifiers=(
         'Programming Language :: Python',
         'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3.6',
     ),
     install_requires=requires,
     extras_require={
