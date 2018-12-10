@@ -5,6 +5,7 @@ from __future__ import print_function, unicode_literals
 import argparse
 import codecs
 
+import lintlens
 from .git import get_diff_lines
 from .lint.unix import parse_lint_line
 from .utils import check_line_overlap_hunks
@@ -24,7 +25,7 @@ def handle_range(revision_range, lint_lines):
 
         hunks = diff_lines[lint_entry.filename]
         if check_line_overlap_hunks(lint_entry.line, hunks, threshold=1):
-            print(lint_line.encode('utf-8'), end='')
+            print(lint_line, end='')
 
 
 def read_file_lines(filename):
@@ -35,6 +36,7 @@ def read_file_lines(filename):
 
 def main():
     parser = argparse.ArgumentParser(prog='lintlens')
+    parser.add_argument('--version', action='version', version='%(prog)s ' + str(lintlens.__version__))
     parser.add_argument('revision_range',
                         help='Include changes in the specified revision range. '
                              'Example: "master..HEAD".'
