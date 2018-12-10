@@ -8,6 +8,14 @@ LintEntry = namedtuple('LintEntry', ['filename', 'line', 'column', 'message'])
 line_parts_pattern = re.compile(r'(?:\./)?(.+?):(\d+):(\d+): ?(.*)')
 
 
+class ParseError(Exception):
+    pass
+
+
+def parse_report(raw_report):
+    pass
+
+
 def parse_lint_line(line):
     """Parse lint diff line
 
@@ -25,6 +33,8 @@ def parse_lint_line(line):
     """
     # TODO: handle colon in filename
     line_parts = line_parts_pattern.match(line)
+    if line_parts is None:
+        raise ParseError('Failed to parse line: %s' % line)
     lint_entry = LintEntry(
         line_parts.group(1),
         int(line_parts.group(2)),
