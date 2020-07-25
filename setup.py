@@ -1,10 +1,8 @@
 #!/usr/bin/env python
-from codecs import open
 import pkg_resources
-from setuptools import setup, find_packages
+from setuptools import find_packages, setup
 
 import lintlens
-
 
 packages = find_packages(include=('lintlens*',), exclude=('*.tests',))
 
@@ -25,7 +23,7 @@ with open('requirements/tests.txt') as requirements_txt:
     ]
 
 
-with open('README.md', 'r', 'utf-8') as f:
+with open('README.md', 'r') as f:
     readme = f.read()
 
 
@@ -41,7 +39,6 @@ setup(
     zip_safe=False,
     classifiers=(
         'Programming Language :: Python',
-        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3.6',
     ),
     install_requires=install_requires,

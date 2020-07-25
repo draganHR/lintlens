@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from __future__ import print_function, unicode_literals
 
 import argparse
 import codecs
 
 import lintlens
+
 from .git import get_diff_lines
 from .lint.unix import parse_lint_line
 from .utils import check_line_overlap_hunks

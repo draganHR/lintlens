@@ -1,6 +1,6 @@
 from __future__ import print_function, unicode_literals
 
-from ..git import parse_hunk, parse_file_line_numbers
+from ..git import parse_file_line_numbers, parse_hunk
 
 
 def test_parse_hunk():

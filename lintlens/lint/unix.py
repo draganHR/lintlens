@@ -1,7 +1,7 @@
 from __future__ import print_function, unicode_literals
 
-from collections import namedtuple
 import re
+from collections import namedtuple
 
 LintEntry = namedtuple('LintEntry', ['filename', 'line', 'column', 'message'])
 

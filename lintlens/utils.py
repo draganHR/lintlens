@@ -1,5 +1,3 @@
-from __future__ import print_function, unicode_literals
-
 
 def check_line_overlap_hunks(start, hunks, threshold):
     for change_from, change_to, _ in hunks:
