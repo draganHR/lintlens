@@ -41,11 +41,12 @@ jobs:
           name: Flake8 check
           command: |
             . .venv/bin/activate
-            flake8 --show-source --format junit-xml --output-file flake8.xml lintlens
+            mkdir -p reports
+            flake8 --show-source --format junit-xml --output-file reports/flake8.xml lintlens
       - store_test_results:
-          path: flake8.xml
+          path: reports
       - store_artifacts:
-          path: flake8.xml
+          path: reports
 
   python-test:
     executor: python
@@ -56,11 +57,12 @@ jobs:
           name: pytest
           command: |
             . .venv/bin/activate
-            pytest --junitxml=pytest.xml --cov-report html --cov=lintlens --cov-config=./.coveragerc .
+            mkdir -p reports
+            pytest --junitxml=reports/pytest.xml --cov-report html --cov=lintlens --cov-config=./.coveragerc .
       - store_test_results:
-          path: pytest.xml
+          path: reports
       - store_artifacts:
-          path: pytest.xml
+          path: reports
       - store_artifacts:
           path: htmlcov
 
