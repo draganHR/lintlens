@@ -8,7 +8,7 @@ import sys
 import lintlens
 
 from .git import get_diff_lines
-from .lint.unix import parse_lint_line, ParseError
+from .lint.unix import ParseError, parse_lint_line
 from .utils import check_line_overlap_hunks
 
 
