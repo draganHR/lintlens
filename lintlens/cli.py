@@ -3,21 +3,27 @@
 
 import argparse
 import codecs
+import sys
 
 import lintlens
 
 from .git import get_diff_lines
-from .lint.unix import parse_lint_line
+from .lint.unix import parse_lint_line, ParseError
 from .utils import check_line_overlap_hunks
 
 
 def handle_range(revision_range, lint_lines):
     diff_lines = {}
+    parse_errors = []
     for filename, hunks in get_diff_lines(revision_range):
         diff_lines[filename[1]] = hunks
 
     for lint_line in lint_lines:
-        lint_entry = parse_lint_line(lint_line)
+        try:
+            lint_entry = parse_lint_line(lint_line)
+        except ParseError as e:
+            parse_errors.append(e)
+            continue
 
         # skip file not changed in revision_range
         if lint_entry.filename not in diff_lines:
@@ -26,6 +32,9 @@ def handle_range(revision_range, lint_lines):
         hunks = diff_lines[lint_entry.filename]
         if check_line_overlap_hunks(lint_entry.line, hunks, threshold=1):
             print(lint_line, end='')
+
+    for parse_error in parse_errors:
+        print(str(parse_error).strip('\n'), file=sys.stderr)
 
 
 def read_file_lines(filename):
